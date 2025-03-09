@@ -3,7 +3,7 @@ export const API_BASE = '/api'
 export const AUTH_URI = {
   BASE: `${API_BASE}/auth`,
   LOGIN: '/login',
-  REGISTER: '/register',
+  REGISTER: '/signup',
 }
 
 export const USER_URI = {

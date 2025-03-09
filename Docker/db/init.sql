@@ -1,0 +1,3 @@
+CREATE DATABASE enroute;
+
+GRANT ALL PRIVILEGES ON DATABASE enroute TO postgres;

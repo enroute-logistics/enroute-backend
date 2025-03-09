@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service'
 import { RegisterDto, LoginDto, AuthResponseDto } from '../dtos/auth.dto'
 import { UserRole } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
+import { User } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  async validateUser(email: string, password: string): Promise<Omit<User, 'password'> | null> {
     const user = await this.prisma.user.findUnique({
       where: { email },
       include: { organization: true },
@@ -52,7 +53,7 @@ export class AuthService {
     }
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
     // Check if user with email already exists
     const existingUser = await this.prisma.user.findUnique({
       where: { email: registerDto.email },
@@ -72,7 +73,7 @@ export class AuthService {
       Math.random().toString(36).substring(2, 7)
 
     // Use a transaction to ensure both organization and user are created or neither
-    return this.prisma.$transaction(async (prisma) => {
+    return this.prisma.$transaction(async (prisma): Promise<AuthResponseDto> => {
       // Create the organization
       const organization = await prisma.organization.create({
         data: {
@@ -110,7 +111,7 @@ export class AuthService {
         },
       })
 
-      return user
+      return this.login(user)
     })
   }
 }
