@@ -619,6 +619,250 @@
         }
       ],
       "description": "Shipment management endpoints"
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "Get All Devices",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/devices",
+              "host": ["{{base_url}}"],
+              "path": ["api", "devices"]
+            },
+            "description": "Get all devices"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/devices/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "devices", "1"]
+            },
+            "description": "Get device by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device by Unique ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/devices/uniqueId/device123",
+              "host": ["{{base_url}}"],
+              "path": ["api", "devices", "uniqueId", "device123"]
+            },
+            "description": "Get device by unique ID"
+          },
+          "response": []
+        }
+      ],
+      "description": "Device management endpoints"
+    },
+    {
+      "name": "Positions",
+      "item": [
+        {
+          "name": "Get All Positions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/positions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions"]
+            },
+            "description": "Get all positions"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Position by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/positions/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions", "1"]
+            },
+            "description": "Get position by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Positions by Device ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/positions/device/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions", "device", "1"]
+            },
+            "description": "Get positions by device ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Positions by Device ID with Limit",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/positions/device/1?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions", "device", "1"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get positions by device ID with limit"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Position by Device ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/positions/device/1/latest",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions", "device", "1", "latest"]
+            },
+            "description": "Get latest position for a device"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Position History",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/positions/device/1/history?from=2023-01-01T00:00:00Z&to=2023-01-02T00:00:00Z",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions", "device", "1", "history"],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2023-01-01T00:00:00Z"
+                },
+                {
+                  "key": "to",
+                  "value": "2023-01-02T00:00:00Z"
+                }
+              ]
+            },
+            "description": "Get position history for a device in a time range"
+          },
+          "response": []
+        }
+      ],
+      "description": "Position management endpoints"
     }
   ]
 }

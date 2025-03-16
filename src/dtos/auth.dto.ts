@@ -38,10 +38,14 @@ export class AuthResponseDto {
     name: string
     role: string
     organizationId: number
-    organization?: {
-      id: number
-      name: string
-      code: string
-    }
+    createdAt: Date
+    updatedAt: Date
+  }
+  organization: {
+    id: number
+    name: string
+    code: string
+    createdAt: Date
+    updatedAt: Date
   }
 }

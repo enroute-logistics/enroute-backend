@@ -35,20 +35,24 @@ export class AuthService {
     }
 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET,
+      }),
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
         organizationId: user.organizationId,
         role: user.role,
-        organization: user.organization
-          ? {
-              id: user.organization.id,
-              name: user.organization.name,
-              code: user.organization.code,
-            }
-          : undefined,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+      organization: {
+        id: user.organization.id,
+        name: user.organization.name,
+        code: user.organization.code,
+        createdAt: user.organization.createdAt,
+        updatedAt: user.organization.updatedAt,
       },
     }
   }

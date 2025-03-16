@@ -1,9 +1,24 @@
 import { NestFactory } from '@nestjs/core'
-import { ValidationPipe } from '@nestjs/common'
+import { ValidationPipe, Logger } from '@nestjs/common'
 import { AppModule } from './app.module'
+import { CORS_URI } from './uris/api.uri'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  // Create a logger instance
+  const logger = new Logger('Bootstrap')
+
+  // Enable application-wide logging
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+  })
+
+  logger.log('Application starting up...')
+
+  // Enable CORS with origins from environment variables
+  app.enableCors({
+    origin: CORS_URI.ALLOWED_ORIGINS,
+    credentials: true,
+  })
 
   // Apply validation globally
   app.useGlobalPipes(
@@ -17,5 +32,6 @@ async function bootstrap() {
   )
 
   await app.listen(process.env.PORT ?? 3000)
+  logger.log(`Application listening on port ${process.env.PORT ?? 3000}`)
 }
 bootstrap()

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 
 // Feature Modules
@@ -7,9 +7,13 @@ import { UsersModule } from './users/users.module'
 import { OrganizationsModule } from './organizations/organizations.module'
 import { VehiclesModule } from './vehicles/vehicles.module'
 import { ShipmentsModule } from './shipments/shipments.module'
+import { DevicesModule } from './devices/devices.module'
+import { PositionsModule } from './positions/positions.module'
+import { CommonModule } from './common/common.module'
 
 // Prisma Service
 import { PrismaService } from './prisma/prisma.service'
+import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware'
 
 @Module({
   imports: [
@@ -21,7 +25,14 @@ import { PrismaService } from './prisma/prisma.service'
     OrganizationsModule,
     VehiclesModule,
     ShipmentsModule,
+    DevicesModule,
+    PositionsModule,
+    CommonModule,
   ],
   providers: [PrismaService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*') // Apply to all routes
+  }
+}
