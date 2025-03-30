@@ -13,9 +13,9 @@ async function bootstrap() {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   })
   const configService = app.get(ConfigService)
-  const corsAllowedOrigins = configService.get('CORS_ALLOWED_ORIGINS')
+  const corsAllowedOrigins = configService.get('CORS_ALLOWED_ORIGINS').split(',')
 
-  logger.log('Application starting up...')
+  logger.log('Application starting up...', corsAllowedOrigins)
 
   // Enable CORS with origins from environment variables
   app.enableCors({
