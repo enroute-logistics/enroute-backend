@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common'
+import { Controller, Post, Body, UnauthorizedException, Delete } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { RegisterDto, LoginDto, AuthResponseDto } from '../dtos/auth.dto'
 import { AUTH_URI } from '../uris/api.uri'
@@ -20,5 +20,10 @@ export class AuthController {
       throw new UnauthorizedException('Invalid credentials')
     }
     return this.authService.login(user)
+  }
+
+  @Delete(AUTH_URI.LOGOUT)
+  async logout(): Promise<void> {
+    return this.authService.logout()
   }
 }

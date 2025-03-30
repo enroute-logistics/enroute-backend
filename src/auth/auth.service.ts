@@ -118,4 +118,8 @@ export class AuthService {
       return this.login(user)
     })
   }
+
+  async logout(): Promise<void> {
+    // TODO: Implement logout
+  }
 }

@@ -1,5 +1,5 @@
 import { CreateOrganizationDto } from './organization.dto'
-import { IsString, IsEmail, IsNotEmpty, MinLength } from 'class-validator'
+import { IsString, IsEmail, IsNotEmpty, MinLength, IsPhoneNumber } from 'class-validator'
 
 export class RegisterDto {
   @IsEmail()
@@ -14,6 +14,15 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   name: string
+
+  @IsString()
+  @IsNotEmpty()
+  role: string
+
+  @IsString()
+  @IsNotEmpty()
+  @IsPhoneNumber()
+  phoneNumber: string
 
   @IsNotEmpty()
   organization: CreateOrganizationDto
