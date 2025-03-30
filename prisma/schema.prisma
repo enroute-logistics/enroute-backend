@@ -14,9 +14,9 @@ model Organization {
   description String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  shipments   Shipment[]
   users       User[]
   vehicles    Vehicle[]
-  shipments   Shipment[]
 }
 
 model User {
@@ -26,11 +26,11 @@ model User {
   name           String
   role           UserRole     @default(USER)
   organizationId Int
-  organization   Organization @relation(fields: [organizationId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   phoneNumber    String?
   shipments      Shipment[]
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
 model Vehicle {
@@ -41,10 +41,10 @@ model Vehicle {
   deviceId       String?       @unique
   status         VehicleStatus
   organizationId Int
-  organization   Organization  @relation(fields: [organizationId], references: [id])
-  shipments      Shipment[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+  shipments      Shipment[]
+  organization   Organization  @relation(fields: [organizationId], references: [id])
 }
 
 model Shipment {
@@ -55,11 +55,11 @@ model Shipment {
   userId         Int
   vehicleId      Int
   organizationId Int
-  user           User           @relation(fields: [userId], references: [id])
-  vehicle        Vehicle        @relation(fields: [vehicleId], references: [id])
-  organization   Organization   @relation(fields: [organizationId], references: [id])
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  user           User           @relation(fields: [userId], references: [id])
+  vehicle        Vehicle        @relation(fields: [vehicleId], references: [id])
 }
 
 enum UserRole {
