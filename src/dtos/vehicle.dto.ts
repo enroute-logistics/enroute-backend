@@ -1,7 +1,24 @@
 import { VehicleStatus } from '@prisma/client'
-import { IsString, IsNumber, IsEnum, IsOptional, IsNotEmpty, Min } from 'class-validator'
+import {
+  IsString,
+  IsNumber,
+  IsEnum,
+  IsOptional,
+  IsNotEmpty,
+  Min,
+  IsDate,
+  isNotEmpty,
+  ValidateIf,
+} from 'class-validator'
+import { CreateDriverDto, UpdateDriverDto } from './driver.dto'
+import { DriverResponseDto } from './driver.dto'
+import * as moment from 'moment'
 
 export class CreateVehicleDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string
+
   @IsString()
   @IsNotEmpty()
   plateNumber: string
@@ -19,11 +36,26 @@ export class CreateVehicleDto {
   deviceId?: string
 
   @IsEnum(VehicleStatus)
+  status: VehicleStatus
+
+  @ValidateIf((o) => o.maintenanceDate !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  maintenanceDate?: string
+
+  @IsNotEmpty()
+  driver: CreateDriverDto
+
+  @IsString()
   @IsOptional()
-  status?: VehicleStatus
+  description?: string
 }
 
 export class UpdateVehicleDto {
+  @IsString()
+  @IsOptional()
+  name?: string
+
   @IsString()
   @IsOptional()
   plateNumber?: string
@@ -44,10 +76,27 @@ export class UpdateVehicleDto {
   @IsEnum(VehicleStatus)
   @IsOptional()
   status?: VehicleStatus
+
+  @ValidateIf((o) => o.maintenanceDate !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  maintenanceDate?: string
+
+  @IsOptional()
+  driver?: UpdateDriverDto
+
+  @IsOptional()
+  @IsNumber()
+  driverId?: number
+
+  @IsString()
+  @IsOptional()
+  description?: string
 }
 
 export class VehicleResponseDto {
   id: number
+  name: string
   plateNumber: string
   model: string
   capacity: number
@@ -56,4 +105,7 @@ export class VehicleResponseDto {
   organizationId: number
   createdAt: Date
   updatedAt: Date
+  maintenanceDate?: Date | null
+  driver?: DriverResponseDto | null
+  description: string
 }

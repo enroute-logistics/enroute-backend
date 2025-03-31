@@ -9,8 +9,7 @@ export class AuthController {
 
   @Post(AUTH_URI.REGISTER)
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
-    const user = await this.authService.register(registerDto)
-    return this.authService.login(user)
+    return await this.authService.register(registerDto)
   }
 
   @Post(AUTH_URI.LOGIN)

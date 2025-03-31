@@ -1,10 +1,16 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common'
 import { VehiclesRepository } from './vehicles.repository'
 import { CreateVehicleDto, UpdateVehicleDto, VehicleResponseDto } from '../dtos/vehicle.dto'
+import { DriversService } from '../drivers/drivers.service'
+import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class VehiclesService {
-  constructor(private vehiclesRepository: VehiclesRepository) {}
+  constructor(
+    private vehiclesRepository: VehiclesRepository,
+    private driversService: DriversService,
+    private prisma: PrismaService,
+  ) {}
 
   async findAll(organizationId: number): Promise<VehicleResponseDto[]> {
     return this.vehiclesRepository.findAll(organizationId)
@@ -18,13 +24,13 @@ export class VehiclesService {
     return vehicle
   }
 
-  async create(data: CreateVehicleDto, organizationId: number): Promise<VehicleResponseDto> {
-    const existingVehicle = await this.vehiclesRepository.findByPlateNumber(data.plateNumber)
-    if (existingVehicle) {
-      throw new ConflictException(`Vehicle with plate number ${data.plateNumber} already exists`)
-    }
+  async create(
+    createVehicleDto: CreateVehicleDto,
+    organizationId: number,
+  ): Promise<VehicleResponseDto> {
+    const { driver, ...vehicleData } = createVehicleDto
 
-    return this.vehiclesRepository.create(data, organizationId)
+    return this.vehiclesRepository.create(createVehicleDto, organizationId)
   }
 
   async update(

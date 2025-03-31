@@ -1,0 +1,4 @@
+-- AlterEnum
+ALTER TYPE "VehicleStatus" ADD VALUE 'UNASSIGNED';
+
+ALTER TYPE "VehicleStatus" ADD VALUE 'STOPPED';

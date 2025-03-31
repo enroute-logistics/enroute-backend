@@ -1,0 +1,270 @@
+{
+  "info": {
+    "name": "Enroute API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "Get All Vehicles",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Create Vehicle",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"plateNumber\": \"ABC123\",\n    \"model\": \"Toyota Hilux\",\n    \"capacity\": 1500,\n    \"deviceId\": \"dev-123\",\n    \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "Get All Devices",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/devices",
+              "host": ["{{base_url}}"],
+              "path": ["api", "devices"]
+            }
+          }
+        },
+        {
+          "name": "Get Device by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/devices/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "devices", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Positions",
+      "item": [
+        {
+          "name": "Get All Positions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/positions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions"]
+            }
+          }
+        },
+        {
+          "name": "Get Position History",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/positions/:deviceId/history?from={{from}}&to={{to}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "positions", ":deviceId", "history"],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{from}}"
+                },
+                {
+                  "key": "to",
+                  "value": "{{to}}"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shipments",
+      "item": [
+        {
+          "name": "Get All Shipments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/shipments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "shipments"]
+            }
+          }
+        },
+        {
+          "name": "Create Shipment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"origin\": \"Location A\",\n    \"destination\": \"Location B\",\n    \"vehicleId\": 1,\n    \"status\": \"PENDING\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/shipments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "shipments"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -17,6 +17,7 @@ model Organization {
   shipments   Shipment[]
   users       User[]
   vehicles    Vehicle[]
+  Driver      Driver[]
 }
 
 model User {
@@ -33,18 +34,33 @@ model User {
   organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
-model Vehicle {
-  id             Int           @id @default(autoincrement())
-  plateNumber    String        @unique
-  model          String
-  capacity       Float
-  deviceId       String?       @unique
-  status         VehicleStatus
+model Driver {
+  id             Int          @id @default(autoincrement())
+  name           String
   organizationId Int
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  shipments      Shipment[]
-  organization   Organization  @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  vehicle        Vehicle?
+}
+
+model Vehicle {
+  id              Int           @id @default(autoincrement())
+  name            String
+  plateNumber     String        @unique
+  model           String
+  description     String        @default("")
+  capacity        Float
+  deviceId        String?       @unique
+  status          VehicleStatus
+  maintenanceDate DateTime?
+  organizationId  Int
+  driverId        Int?          @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  shipments       Shipment[]
+  organization    Organization  @relation(fields: [organizationId], references: [id])
+  driver          Driver?       @relation(fields: [driverId], references: [id])
 }
 
 model Shipment {
@@ -77,4 +93,6 @@ enum ShipmentStatus {
 enum VehicleStatus {
   ACTIVE
   INACTIVE
+  UNASSIGNED
+  STOPPED
 }

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Vehicle"
+ADD COLUMN "name" TEXT NOT NULL;

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { Vehicle, Prisma, VehicleStatus } from '@prisma/client'
-import { CreateVehicleDto, UpdateVehicleDto } from '../dtos/vehicle.dto'
+import { CreateVehicleDto, UpdateVehicleDto, VehicleResponseDto } from '../dtos/vehicle.dto'
+import * as moment from 'moment'
 
 @Injectable()
 export class VehiclesRepository {
@@ -28,26 +29,42 @@ export class VehiclesRepository {
     })
   }
 
-  async create(data: CreateVehicleDto, organizationId: number): Promise<Vehicle> {
+  async create(data: CreateVehicleDto, organizationId: number): Promise<VehicleResponseDto> {
+    const { driver, ...vehicleData } = data
     return this.prisma.vehicle.create({
       data: {
-        plateNumber: data.plateNumber,
-        model: data.model,
-        capacity: data.capacity,
-        deviceId: data.deviceId,
-        status: data.status || VehicleStatus.ACTIVE,
+        ...vehicleData,
+        maintenanceDate: vehicleData.maintenanceDate
+          ? moment(vehicleData.maintenanceDate).toDate()
+          : null,
         organizationId,
+      },
+      include: {
+        driver: true,
       },
     })
   }
 
-  async update(id: number, data: UpdateVehicleDto, organizationId: number): Promise<Vehicle> {
+  async update(
+    id: number,
+    data: UpdateVehicleDto,
+    organizationId: number,
+  ): Promise<VehicleResponseDto> {
+    const { driver, ...vehicleData } = data
     return this.prisma.vehicle.update({
       where: {
         id,
         organizationId,
       },
-      data,
+      data: {
+        ...vehicleData,
+        maintenanceDate: vehicleData.maintenanceDate
+          ? moment(vehicleData.maintenanceDate).toDate()
+          : undefined,
+      },
+      include: {
+        driver: true,
+      },
     })
   }
 
