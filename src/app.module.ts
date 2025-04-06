@@ -11,6 +11,7 @@ import { DevicesModule } from './devices/devices.module'
 import { PositionsModule } from './positions/positions.module'
 import { CommonModule } from './common/common.module'
 import { DriversModule } from './drivers/drivers.module'
+import { CustomersModule } from './customers/customers.module'
 
 // Prisma Service
 import { PrismaService } from './prisma/prisma.service'
@@ -30,6 +31,7 @@ import { RequestLoggerMiddleware } from './common/middleware/request-logger.midd
     PositionsModule,
     CommonModule,
     DriversModule,
+    CustomersModule,
   ],
   providers: [PrismaService],
 })

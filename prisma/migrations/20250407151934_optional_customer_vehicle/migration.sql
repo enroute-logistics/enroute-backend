@@ -1,0 +1,5 @@
+ALTER TABLE "Shipment"
+ALTER COLUMN "customerId"
+DROP NOT NULL,
+ALTER COLUMN "vehicleId"
+DROP NOT NULL;

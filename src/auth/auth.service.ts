@@ -115,8 +115,6 @@ export class AuthService {
         },
       })
 
-      console.log('new user is', user)
-
       return this.login(user)
     })
   }

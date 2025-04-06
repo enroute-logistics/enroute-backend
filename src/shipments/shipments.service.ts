@@ -1,13 +1,54 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { ShipmentsRepository } from './shipments.repository'
 import { CreateShipmentDto, UpdateShipmentDto, ShipmentResponseDto } from '../dtos/shipment.dto'
+import { Shipment, Customer } from '@prisma/client'
+import { CustomersService } from '../customers/customers.service'
 
 @Injectable()
 export class ShipmentsService {
-  constructor(private shipmentsRepository: ShipmentsRepository) {}
+  constructor(
+    private shipmentsRepository: ShipmentsRepository,
+    private customersService: CustomersService,
+  ) {}
+
+  private toResponseDto(shipment: Shipment & { customer: Customer | null }): ShipmentResponseDto {
+    const {
+      originLat,
+      originLng,
+      originName,
+      destinationLat,
+      destinationLng,
+      destinationName,
+      customer,
+      ...rest
+    } = shipment
+    return {
+      origin: {
+        lat: originLat,
+        lng: originLng,
+        name: originName,
+      },
+      destination: {
+        lat: destinationLat,
+        lng: destinationLng,
+        name: destinationName,
+      },
+      customer: customer
+        ? {
+            id: customer.id,
+            name: customer.name,
+            email: customer.email ?? undefined,
+            phoneNumber: customer.phoneNumber ?? undefined,
+            address: customer.address ?? undefined,
+          }
+        : null,
+      ...rest,
+    }
+  }
 
   async findAll(organizationId: number): Promise<ShipmentResponseDto[]> {
-    return this.shipmentsRepository.findAll(organizationId)
+    const shipments = await this.shipmentsRepository.findAll(organizationId)
+    return shipments.map((shipment) => this.toResponseDto(shipment))
   }
 
   async findById(id: number, organizationId: number): Promise<ShipmentResponseDto> {
@@ -15,7 +56,7 @@ export class ShipmentsService {
     if (!shipment) {
       throw new NotFoundException(`Shipment with ID ${id} not found`)
     }
-    return shipment
+    return this.toResponseDto(shipment)
   }
 
   async create(
@@ -23,7 +64,27 @@ export class ShipmentsService {
     userId: number,
     organizationId: number,
   ): Promise<ShipmentResponseDto> {
-    return this.shipmentsRepository.create(data, userId, organizationId)
+    const { customerName, customerEmail, customerPhoneNumber, customerId, ...rest } = data
+    let customerIdToUse = customerId
+
+    if (!customerId && customerName && customerEmail && customerPhoneNumber) {
+      const customer = await this.customersService.create(
+        {
+          name: customerName,
+          email: customerEmail,
+          phoneNumber: customerPhoneNumber,
+        },
+        organizationId,
+      )
+      customerIdToUse = customer.id
+    }
+
+    const shipment = await this.shipmentsRepository.create(
+      { ...rest, customerId: customerIdToUse },
+      userId,
+      organizationId,
+    )
+    return this.toResponseDto(shipment)
   }
 
   async update(
@@ -32,11 +93,33 @@ export class ShipmentsService {
     organizationId: number,
   ): Promise<ShipmentResponseDto> {
     await this.findById(id, organizationId) // Validate shipment exists
-    return this.shipmentsRepository.update(id, data, organizationId)
+
+    const { customerName, customerEmail, customerPhoneNumber, customerId, ...rest } = data
+    let customerIdToUse = customerId
+
+    if (!customerId && customerName && customerEmail && customerPhoneNumber) {
+      const customer = await this.customersService.create(
+        {
+          name: customerName,
+          email: customerEmail,
+          phoneNumber: customerPhoneNumber,
+        },
+        organizationId,
+      )
+      customerIdToUse = customer.id
+    }
+
+    const shipment = await this.shipmentsRepository.update(
+      id,
+      { ...rest, customerId: customerIdToUse },
+      organizationId,
+    )
+    return this.toResponseDto(shipment)
   }
 
   async delete(id: number, organizationId: number): Promise<ShipmentResponseDto> {
     await this.findById(id, organizationId) // Validate shipment exists
-    return this.shipmentsRepository.delete(id, organizationId)
+    const shipment = await this.shipmentsRepository.delete(id, organizationId)
+    return this.toResponseDto(shipment)
   }
 }
