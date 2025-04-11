@@ -4,6 +4,7 @@ import Device from '../interfaces/device.interface'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { DEVICE_URI } from '../uris/api.uri'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger'
+import Position from '../interfaces/position.interface'
 
 @ApiTags('devices')
 @Controller(DEVICE_URI.BASE)
@@ -20,6 +21,15 @@ export class DevicesController {
       return [await this.devicesService.findByUniqueId(uniqueId)]
     }
     return this.devicesService.findAll()
+  }
+
+  // Get positions by device ID
+  @Get(DEVICE_URI.POSITIONS)
+  @ApiOperation({ summary: 'Get positions by device ID' })
+  @ApiResponse({ status: 200, description: 'Return the positions' })
+  @ApiParam({ name: 'id', type: 'number' })
+  async getPositionsByDeviceId(@Param('id') id: number): Promise<Position[]> {
+    return this.devicesService.getPositionsByDeviceId(id)
   }
 
   @Get(DEVICE_URI.BY_ID)

@@ -1,16 +1,10 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common'
 import { VehiclesRepository } from './vehicles.repository'
 import { CreateVehicleDto, UpdateVehicleDto, VehicleResponseDto } from '../dtos/vehicle.dto'
-import { DriversService } from '../drivers/drivers.service'
-import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class VehiclesService {
-  constructor(
-    private vehiclesRepository: VehiclesRepository,
-    private driversService: DriversService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private vehiclesRepository: VehiclesRepository) {}
 
   async findAll(organizationId: number): Promise<VehicleResponseDto[]> {
     return this.vehiclesRepository.findAll(organizationId)

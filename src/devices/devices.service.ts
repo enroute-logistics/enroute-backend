@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { TraccarApiClientService } from '../common/services/traccar-api-client.service'
 import Device from '../interfaces/device.interface'
+import Position from '../interfaces/position.interface'
 
 @Injectable()
 export class DevicesService {
@@ -31,6 +32,17 @@ export class DevicesService {
     } catch (error) {
       if (error.status === 404) {
         throw new NotFoundException(`Device with uniqueId ${uniqueId} not found`)
+      }
+      throw error
+    }
+  }
+
+  async getPositionsByDeviceId(deviceId: number, limit?: number): Promise<Position[]> {
+    try {
+      return await this.traccarApiClient.getPositionsByDeviceId(deviceId, limit)
+    } catch (error) {
+      if (error.status === 404) {
+        throw new NotFoundException(`Positions for device with ID ${deviceId} not found`)
       }
       throw error
     }
