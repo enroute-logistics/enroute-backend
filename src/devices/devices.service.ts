@@ -2,10 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { TraccarApiClientService } from '../common/services/traccar-api-client.service'
 import Device from '../interfaces/device.interface'
 import Position from '../interfaces/position.interface'
-
+import { MapboxService } from '../common/services/mapbox.service'
 @Injectable()
 export class DevicesService {
-  constructor(private traccarApiClient: TraccarApiClientService) {}
+  constructor(
+    private traccarApiClient: TraccarApiClientService,
+    private mapboxService: MapboxService,
+  ) {}
 
   async findAll(): Promise<Device[]> {
     return this.traccarApiClient.getAllDevices()
@@ -39,7 +42,16 @@ export class DevicesService {
 
   async getPositionsByDeviceId(deviceId: number, limit?: number): Promise<Position[]> {
     try {
-      return await this.traccarApiClient.getPositionsByDeviceId(deviceId, limit)
+      const positions = await this.traccarApiClient.getPositionsByDeviceId(deviceId, limit)
+      for (const position of positions) {
+        if (!position.address) {
+          position.address = await this.mapboxService.getAddressFromCoordinates(
+            position.latitude,
+            position.longitude,
+          )
+        }
+      }
+      return positions
     } catch (error) {
       if (error.status === 404) {
         throw new NotFoundException(`Positions for device with ID ${deviceId} not found`)

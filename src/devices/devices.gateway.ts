@@ -10,8 +10,10 @@ import { Logger } from '@nestjs/common'
 import { Server, Socket } from 'socket.io'
 import { DevicesService } from './devices.service'
 import { TraccarSocketService } from '../common/services/traccar-socket.service'
+import { MapboxService } from '../common/services/mapbox.service'
 import { UseGuards } from '@nestjs/common'
 import { WsJwtAuthGuard } from '../auth/ws-jwt-auth.guard'
+import { NotFoundException } from '@nestjs/common'
 
 @WebSocketGateway({
   cors: {
@@ -28,6 +30,7 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
   constructor(
     private readonly devicesService: DevicesService,
     private readonly traccarSocketService: TraccarSocketService,
+    private readonly mapboxService: MapboxService,
   ) {}
 
   afterInit(server: Server) {
@@ -158,8 +161,8 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
   }
 
-  private broadcastPositionUpdates(positions: any[]) {
-    positions.forEach((position) => {
+  private async broadcastPositionUpdates(positions: any[]) {
+    for (const position of positions) {
       const deviceId = position.deviceId.toString()
       if (this.deviceSubscriptions.has(deviceId)) {
         const socketIds = this.deviceSubscriptions.get(deviceId)
@@ -167,12 +170,13 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
           socketIds.forEach((socketId) => {
             const client = this.server.sockets.sockets.get(socketId)
             if (client) {
+              this.populateAddress(position)
               client.emit('positionUpdate', position)
             }
           })
         }
       }
-    })
+    }
   }
 
   private broadcastDeviceUpdates(devices: any[]) {
@@ -207,5 +211,28 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
         }
       }
     })
+  }
+
+  private async populateAddress(position: any) {
+    // Get address from Mapbox if not already present
+    if (!position.address && position.latitude && position.longitude) {
+      try {
+        const result = await this.mapboxService.getAddressFromCoordinates(
+          position.latitude,
+          position.longitude,
+        )
+        position.address = result
+      } catch (error) {
+        if (error instanceof NotFoundException) {
+          // Set address as undefined when no address is found
+          position.address = undefined
+          this.logger.debug(
+            `No address found for position at lat: ${position.latitude}, lon: ${position.longitude}`,
+          )
+        } else {
+          this.logger.error(`Error getting address for position: ${error.message}`)
+        }
+      }
+    }
   }
 }
