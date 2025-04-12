@@ -51,3 +51,8 @@ export const ADDRESS_URI = {
   BASE: `${API_BASE}/address`,
   SEARCH: '/search',
 }
+
+export const ROUTE_URI = {
+  BASE: `${API_BASE}/route`,
+  SEARCH: '/search',
+}

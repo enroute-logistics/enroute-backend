@@ -4,11 +4,12 @@ import { TraccarApiClientService } from './services/traccar-api-client.service'
 import { TraccarSocketService } from './services/traccar-socket.service'
 import { MapboxService } from './services/mapbox.service'
 import { AddressController } from './controllers/address.controller'
+import { RouteController } from './controllers/route.controller'
 
 @Global()
 @Module({
   imports: [ConfigModule],
-  controllers: [AddressController],
+  controllers: [AddressController, RouteController],
   providers: [TraccarApiClientService, TraccarSocketService, MapboxService],
   exports: [TraccarApiClientService, TraccarSocketService, MapboxService],
 })

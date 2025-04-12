@@ -2,6 +2,8 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import axios from 'axios'
 import { AddressSearchResponseDto } from 'src/dtos/address.dto'
+import { RouteSearchRequestDto, RouteSearchResponseDto } from 'src/dtos/route.dto'
+
 @Injectable()
 export class MapboxService {
   private readonly logger = new Logger(MapboxService.name)
@@ -26,8 +28,9 @@ export class MapboxService {
 
   async getAddressFromCoordinates(latitude: number, longitude: number): Promise<string> {
     try {
-      const response = await this.apiClient.get(`/${longitude},${latitude}.json`)
-      console.log('response', response.data)
+      const response = await this.apiClient.get(
+        `/geocoding/v5/mapbox.places/${longitude},${latitude}.json`,
+      )
       const features = response.data.features
 
       if (features && features.length > 0) {
@@ -71,6 +74,39 @@ export class MapboxService {
       }))
     } catch (error) {
       this.logger.error(`Error searching address from Mapbox: ${error.message}`)
+      throw error
+    }
+  }
+
+  async searchRoute(params: RouteSearchRequestDto): Promise<RouteSearchResponseDto> {
+    try {
+      const {
+        startLongitude,
+        startLatitude,
+        endLongitude,
+        endLatitude,
+        alternatives = true,
+        steps = true,
+        geometries = 'geojson',
+      } = params
+
+      const coordinates = encodeURIComponent(
+        `${startLongitude},${startLatitude};${endLongitude},${endLatitude}`,
+      )
+
+      const response = await this.apiClient.get(`/directions/v5/mapbox/driving/${coordinates}`, {
+        params: {
+          alternatives,
+          steps,
+          geometries,
+          overview: 'full',
+          language: 'en',
+        },
+      })
+
+      return response.data
+    } catch (error) {
+      this.logger.error(`Error searching route from Mapbox: ${error.message}`)
       throw error
     }
   }
