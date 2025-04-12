@@ -46,3 +46,8 @@ export const DRIVER_URI = {
   BASE: `${API_BASE}/drivers`,
   BY_ID: '/:id',
 }
+
+export const ADDRESS_URI = {
+  BASE: `${API_BASE}/address`,
+  SEARCH: '/search',
+}

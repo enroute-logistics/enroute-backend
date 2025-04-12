@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import axios from 'axios'
-
+import { AddressSearchResponseDto } from 'src/dtos/address.dto'
 @Injectable()
 export class MapboxService {
   private readonly logger = new Logger(MapboxService.name)
@@ -41,6 +41,36 @@ export class MapboxService {
         throw error
       }
       this.logger.error(`Error fetching address from Mapbox: ${error.message}`)
+      throw error
+    }
+  }
+
+  async searchAddress(query: string, limit: number = 5): Promise<AddressSearchResponseDto[]> {
+    try {
+      const response = await this.apiClient.get(
+        '/geocoding/v5/mapbox.places/' + encodeURIComponent(query) + '.json',
+        {
+          params: {
+            limit,
+            types: 'address,place,poi',
+            language: 'en',
+          },
+        },
+      )
+
+      const features = response.data.features
+      if (!features || features.length === 0) {
+        return []
+      }
+
+      return features.map((feature) => ({
+        id: feature.id,
+        placeName: feature.place_name,
+        longitude: feature.center[0],
+        latitude: feature.center[1],
+      }))
+    } catch (error) {
+      this.logger.error(`Error searching address from Mapbox: ${error.message}`)
       throw error
     }
   }
