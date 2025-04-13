@@ -93,6 +93,7 @@ export class TraccarSocketService implements OnModuleDestroy {
 
       this.ws.on('message', (data: WebSocket.Data) => {
         if (this.messageCallback) {
+          this.logger.log(`Received message: ${data}`)
           this.messageCallback(data)
         }
       })

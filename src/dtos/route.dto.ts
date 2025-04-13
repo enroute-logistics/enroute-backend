@@ -31,7 +31,7 @@ export class RouteSearchResponseDto {
     duration: number
     geometry: string
     legs: RouteLegDto[]
-  }[]
+  }
   waypoints: {
     location: [number, number]
     name: string

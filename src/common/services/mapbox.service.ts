@@ -103,8 +103,9 @@ export class MapboxService {
           language: 'en',
         },
       })
-
-      return response.data
+      const result = response.data
+      result.routes = result.routes[0]
+      return result
     } catch (error) {
       this.logger.error(`Error searching route from Mapbox: ${error.message}`)
       throw error
