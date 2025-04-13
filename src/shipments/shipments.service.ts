@@ -92,10 +92,15 @@ export class ShipmentsService {
     data: UpdateShipmentDto,
     organizationId: number,
   ): Promise<ShipmentResponseDto> {
-    await this.findById(id, organizationId) // Validate shipment exists
+    const currentShipment = await this.findById(id, organizationId) // Validate shipment exists
 
-    const { customerName, customerEmail, customerPhoneNumber, customerId, ...rest } = data
+    const { customerName, customerEmail, customerPhoneNumber, customerId, vehicleId, ...rest } =
+      data
     let customerIdToUse = customerId
+    let vehicleIdToUse = currentShipment.vehicleId
+    if (!vehicleId) {
+      vehicleIdToUse = null
+    }
 
     if (!customerId && customerName && customerEmail && customerPhoneNumber) {
       const customer = await this.customersService.create(

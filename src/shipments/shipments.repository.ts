@@ -88,7 +88,11 @@ export class ShipmentsRepository {
     if (data.customerId !== undefined) updateData.customer = { connect: { id: data.customerId } }
     if (data.distance !== undefined) updateData.distance = data.distance
     if (data.status !== undefined) updateData.status = data.status
-    if (data.vehicleId !== undefined) updateData.vehicle = { connect: { id: data.vehicleId } }
+    if (data.vehicleId) {
+      updateData.vehicle = { connect: { id: data.vehicleId } }
+    } else {
+      updateData.vehicle = { disconnect: true }
+    }
     if (data.plannedPickupDate !== undefined) updateData.plannedPickupDate = data.plannedPickupDate
     if (data.plannedDeliveryDate !== undefined)
       updateData.plannedDeliveryDate = data.plannedDeliveryDate
