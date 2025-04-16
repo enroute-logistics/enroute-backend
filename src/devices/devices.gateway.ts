@@ -125,7 +125,8 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
     }
   }
 
-  private handleTraccarMessage(message: any) {
+  private handleTraccarMessage(messageRaw: any) {
+    const message = JSON.parse(messageRaw)
     // Handle positions array from Traccar
     if (message.positions && Array.isArray(message.positions)) {
       // Filter positions for subscribed devices
