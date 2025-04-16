@@ -17,8 +17,10 @@ import { NotFoundException } from '@nestjs/common'
 
 @WebSocketGateway({
   cors: {
-    origin: '*', // In production, this should be restricted to your frontend domain
+    origin: process.env.CORS_ALLOWED_ORIGINS?.split(','),
+    credentials: true,
   },
+  path: '/socket.io',
 })
 @UseGuards(WsJwtAuthGuard)
 export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
