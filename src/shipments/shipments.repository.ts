@@ -126,4 +126,16 @@ export class ShipmentsRepository {
       },
     })
   }
+
+  async findByVehicleId(
+    vehicleId: number,
+    organizationId: number,
+  ): Promise<(Shipment & { customer: Customer | null })[]> {
+    return this.prisma.shipment.findMany({
+      where: { vehicleId, organizationId },
+      include: {
+        customer: true,
+      },
+    })
+  }
 }

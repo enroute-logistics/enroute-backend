@@ -40,6 +40,15 @@ export class PositionsService {
     }
   }
 
+  async getLatestPositionByDeviceIds(deviceIds: number[]): Promise<Position[]> {
+    const positions: Position[] = []
+    for (const deviceId of deviceIds) {
+      const position = await this.getLatestPositionByDeviceId(deviceId)
+      positions.push(position)
+    }
+    return positions
+  }
+
   async getPositionsInTimeRange(deviceId: number, from: string, to: string): Promise<Position[]> {
     return this.traccarApiClient.getPositionsInTimeRange(deviceId, from, to)
   }

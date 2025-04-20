@@ -59,6 +59,11 @@ export class ShipmentsService {
     return this.toResponseDto(shipment)
   }
 
+  async findByVehicleId(vehicleId: number, organizationId: number): Promise<ShipmentResponseDto[]> {
+    const shipments = await this.shipmentsRepository.findByVehicleId(vehicleId, organizationId)
+    return shipments.map((shipment) => this.toResponseDto(shipment))
+  }
+
   async create(
     data: CreateShipmentDto,
     userId: number,
@@ -100,6 +105,8 @@ export class ShipmentsService {
     let vehicleIdToUse = currentShipment.vehicleId
     if (!vehicleId) {
       vehicleIdToUse = null
+    } else {
+      vehicleIdToUse = vehicleId
     }
 
     if (!customerId && customerName && customerEmail && customerPhoneNumber) {
@@ -116,7 +123,7 @@ export class ShipmentsService {
 
     const shipment = await this.shipmentsRepository.update(
       id,
-      { ...rest, customerId: customerIdToUse },
+      { ...rest, customerId: customerIdToUse, vehicleId: vehicleIdToUse ?? undefined },
       organizationId,
     )
     return this.toResponseDto(shipment)

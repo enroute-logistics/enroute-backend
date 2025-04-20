@@ -56,7 +56,7 @@ export class MapboxService {
           params: {
             limit,
             types: 'address,place,poi',
-            language: 'en',
+            proximity: '38.761253,9.010793',
           },
         },
       )
