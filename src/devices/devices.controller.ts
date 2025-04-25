@@ -32,6 +32,26 @@ export class DevicesController {
     return this.devicesService.getPositionsByDeviceId(id)
   }
 
+  // Get past positions by device ID
+  @Get(DEVICE_URI.PAST_POSITIONS)
+  @ApiOperation({ summary: 'Get past positions by device ID' })
+  @ApiResponse({ status: 200, description: 'Return the past positions' })
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    type: String,
+    description: 'Start date in ISO format',
+  })
+  @ApiQuery({ name: 'to', required: false, type: String, description: 'End date in ISO format' })
+  async getPastPositionsByDeviceId(
+    @Param('id') id: number,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ): Promise<Position[]> {
+    return this.devicesService.getPositionsInTimeRange(id, from, to)
+  }
+
   @Get(DEVICE_URI.BY_ID)
   @ApiOperation({ summary: 'Get a device by ID' })
   @ApiResponse({ status: 200, description: 'Return the device' })

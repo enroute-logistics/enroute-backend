@@ -40,6 +40,7 @@ export const DEVICE_URI = {
   BASE: `${API_BASE}/devices`,
   BY_ID: '/:id',
   POSITIONS: '/:id/positions',
+  PAST_POSITIONS: '/:id/past-positions',
 }
 
 export const DRIVER_URI = {
