@@ -1,11 +1,11 @@
-import { Controller, Get, Param, UseGuards, Query } from '@nestjs/common'
+import { Controller, Get, Param, UseGuards, Query, UseInterceptors } from '@nestjs/common'
 import { DevicesService } from './devices.service'
 import Device from '../interfaces/device.interface'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { DEVICE_URI } from '../uris/api.uri'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger'
 import Position from '../interfaces/position.interface'
-
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager'
 @ApiTags('devices')
 @Controller(DEVICE_URI.BASE)
 @UseGuards(JwtAuthGuard)
@@ -44,6 +44,8 @@ export class DevicesController {
     description: 'Start date in ISO format',
   })
   @ApiQuery({ name: 'to', required: false, type: String, description: 'End date in ISO format' })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60 * 60 * 2) // 2 hours in seconds
   async getPastPositionsByDeviceId(
     @Param('id') id: number,
     @Query('from') from?: string,

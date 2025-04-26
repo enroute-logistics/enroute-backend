@@ -1,13 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { TraccarApiClientService } from '../common/services/traccar-api-client.service'
 import Device from '../interfaces/device.interface'
 import Position from '../interfaces/position.interface'
 import { MapboxService } from '../common/services/mapbox.service'
 
-const DEFAULT_DAYS_AGO = 1
+const DEFAULT_DAYS_AGO = 10
 
 @Injectable()
 export class DevicesService {
+  private readonly logger = new Logger(DevicesService.name)
   constructor(
     private traccarApiClient: TraccarApiClientService,
     private mapboxService: MapboxService,
@@ -64,12 +65,22 @@ export class DevicesService {
   }
 
   async getPositionsInTimeRange(deviceId: number, from?: string, to?: string): Promise<Position[]> {
+    this.logger.log(`Getting positions for device ${deviceId} from ${from} to ${to}`)
     if (!from) {
       from = new Date(Date.now() - 1000 * 60 * 60 * 24 * DEFAULT_DAYS_AGO).toISOString()
     }
     if (!to) {
       to = new Date().toISOString()
     }
-    return this.traccarApiClient.getPositionsInTimeRange(deviceId, from, to)
+    const result = await this.traccarApiClient.getPositionsInTimeRange(deviceId, from, to)
+    // filter out locations that are around the same location within 100 meters
+    return result.filter(
+      (location, index, self) =>
+        self.findIndex(
+          (t) =>
+            Math.abs(t.latitude - location.latitude) < 0.001 &&
+            Math.abs(t.longitude - location.longitude) < 0.001,
+        ) === index,
+    )
   }
 }

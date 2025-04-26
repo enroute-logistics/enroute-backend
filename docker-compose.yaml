@@ -15,6 +15,21 @@ services:
     volumes:
       - ./Docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./Docker/db/dumps:/dumps
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - local
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
 networks:
   local:
     name: enroute_local
+
+volumes:
+  redis_data:
