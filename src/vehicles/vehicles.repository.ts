@@ -11,6 +11,9 @@ export class VehiclesRepository {
   async findAll(organizationId: number): Promise<Vehicle[]> {
     return this.prisma.vehicle.findMany({
       where: { organizationId },
+      include: {
+        driver: true,
+      },
     })
   }
 
@@ -20,12 +23,18 @@ export class VehiclesRepository {
         id,
         organizationId,
       },
+      include: {
+        driver: true,
+      },
     })
   }
 
   async findByPlateNumber(plateNumber: string): Promise<Vehicle | null> {
     return this.prisma.vehicle.findUnique({
       where: { plateNumber },
+      include: {
+        driver: true,
+      },
     })
   }
 
@@ -51,7 +60,7 @@ export class VehiclesRepository {
     organizationId: number,
   ): Promise<VehicleResponseDto> {
     const { driver, ...vehicleData } = data
-    return this.prisma.vehicle.update({
+    const resultVehicle = await this.prisma.vehicle.update({
       where: {
         id,
         organizationId,
@@ -66,6 +75,22 @@ export class VehiclesRepository {
         driver: true,
       },
     })
+
+    if (driver) {
+      const deiverResult = await this.prisma.driver.create({
+        data: {
+          name: driver.name,
+          organizationId,
+        },
+      })
+      await this.prisma.vehicle.update({
+        where: { id },
+        data: { driverId: deiverResult.id },
+      })
+      resultVehicle.driver = deiverResult
+    }
+
+    return resultVehicle
   }
 
   async delete(id: number, organizationId: number): Promise<Vehicle> {
