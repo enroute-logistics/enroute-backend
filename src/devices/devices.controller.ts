@@ -5,7 +5,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { DEVICE_URI } from '../uris/api.uri'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger'
 import Position from '../interfaces/position.interface'
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager'
+import { RedisCacheInterceptor } from '../common/interceptors/redis-cache.interceptor'
+import { RedisCacheTTL } from '../common/decorators/redis-cache.decorator'
+
 @ApiTags('devices')
 @Controller(DEVICE_URI.BASE)
 @UseGuards(JwtAuthGuard)
@@ -44,8 +46,8 @@ export class DevicesController {
     description: 'Start date in ISO format',
   })
   @ApiQuery({ name: 'to', required: false, type: String, description: 'End date in ISO format' })
-  @UseInterceptors(CacheInterceptor)
-  @CacheTTL(60 * 60 * 2) // 2 hours in seconds
+  @UseInterceptors(RedisCacheInterceptor)
+  @RedisCacheTTL(7200) // 2 hours
   async getPastPositionsByDeviceId(
     @Param('id') id: number,
     @Query('from') from?: string,

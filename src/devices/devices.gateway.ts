@@ -92,7 +92,6 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
       // Send the latest position data
       const positions = await this.devicesService.getPositionsByDeviceId(deviceId, 1)
-      this.logger.log('New Positions', positions)
 
       if (positions.length > 0) {
         client.emit('positionUpdate', positions[0])

@@ -1,7 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { CacheModule } from '@nestjs/cache-manager'
-import * as redisStore from 'cache-manager-redis-store'
 
 // Feature Modules
 import { AuthModule } from './auth/auth.module'
@@ -14,6 +12,7 @@ import { PositionsModule } from './positions/positions.module'
 import { CommonModule } from './common/common.module'
 import { DriversModule } from './drivers/drivers.module'
 import { CustomersModule } from './customers/customers.module'
+import { RedisCacheModule } from './common/redis-cache.module'
 
 // Prisma Service
 import { PrismaService } from './prisma/prisma.service'
@@ -24,18 +23,7 @@ import { RequestLoggerMiddleware } from './common/middleware/request-logger.midd
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    CacheModule.registerAsync({
-      isGlobal: true,
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        store: redisStore,
-        host: configService.get('REDIS_HOST', 'localhost'),
-        port: configService.get('REDIS_PORT', 6379),
-        max: 100, // maximum number of items in cache
-        prefix: 'enroute:', // prefix for all cache keys
-      }),
-      inject: [ConfigService],
-    }),
+    RedisCacheModule,
     AuthModule,
     UsersModule,
     OrganizationsModule,
