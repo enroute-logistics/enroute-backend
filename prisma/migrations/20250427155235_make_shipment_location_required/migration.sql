@@ -1,0 +1,14 @@
+-- AlterTable
+ALTER TABLE "Shipment"
+ALTER COLUMN "originLat"
+DROP DEFAULT,
+ALTER COLUMN "originLng"
+DROP DEFAULT,
+ALTER COLUMN "originName"
+DROP DEFAULT,
+ALTER COLUMN "destinationLat"
+DROP DEFAULT,
+ALTER COLUMN "destinationLng"
+DROP DEFAULT,
+ALTER COLUMN "destinationName"
+DROP DEFAULT;

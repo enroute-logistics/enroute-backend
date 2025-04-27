@@ -57,3 +57,8 @@ export const ROUTE_URI = {
   BASE: `${API_BASE}/route`,
   SEARCH: '/search',
 }
+
+export const CUSTOMER_URI = {
+  BASE: `${API_BASE}/customers`,
+  BY_ID: '/:id',
+}

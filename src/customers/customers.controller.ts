@@ -2,8 +2,9 @@ import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } f
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { CustomersService } from './customers.service'
 import { CreateCustomerDto, UpdateCustomerDto, CustomerResponseDto } from '../dtos/customer.dto'
+import { CUSTOMER_URI } from 'src/uris/api.uri'
 
-@Controller('customers')
+@Controller(CUSTOMER_URI.BASE)
 export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
@@ -23,13 +24,13 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get(CUSTOMER_URI.BY_ID)
   async getCustomer(@Request() req, @Param('id') id: string): Promise<CustomerResponseDto> {
     return this.customersService.findById(parseInt(id), req.user.organizationId)
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':id')
+  @Put(CUSTOMER_URI.BY_ID)
   async updateCustomer(
     @Request() req,
     @Param('id') id: string,
@@ -39,7 +40,7 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
+  @Delete(CUSTOMER_URI.BY_ID)
   async deleteCustomer(@Request() req, @Param('id') id: string): Promise<CustomerResponseDto> {
     return this.customersService.delete(parseInt(id), req.user.organizationId)
   }

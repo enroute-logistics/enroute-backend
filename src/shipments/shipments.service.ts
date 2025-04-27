@@ -70,9 +70,9 @@ export class ShipmentsService {
     organizationId: number,
   ): Promise<ShipmentResponseDto> {
     const { customerName, customerEmail, customerPhoneNumber, customerId, ...rest } = data
-    let customerIdToUse = customerId
+    let customerIdToUse: number
 
-    if (!customerId && customerName && customerEmail && customerPhoneNumber) {
+    if (!customerId) {
       const customer = await this.customersService.create(
         {
           name: customerName,
@@ -82,6 +82,8 @@ export class ShipmentsService {
         organizationId,
       )
       customerIdToUse = customer.id
+    } else {
+      customerIdToUse = customerId
     }
 
     const shipment = await this.shipmentsRepository.create(
@@ -97,33 +99,21 @@ export class ShipmentsService {
     data: UpdateShipmentDto,
     organizationId: number,
   ): Promise<ShipmentResponseDto> {
-    const currentShipment = await this.findById(id, organizationId) // Validate shipment exists
-
-    const { customerName, customerEmail, customerPhoneNumber, customerId, vehicleId, ...rest } =
-      data
-    let customerIdToUse = customerId
-    let vehicleIdToUse = currentShipment.vehicleId
-    if (!vehicleId) {
-      vehicleIdToUse = null
-    } else {
-      vehicleIdToUse = vehicleId
-    }
-
-    if (!customerId && customerName && customerEmail && customerPhoneNumber) {
+    const { customerId, customerName, customerEmail, customerPhoneNumber, ...rest } = data
+    let customerIdToUse: number
+    if (!customerId) {
       const customer = await this.customersService.create(
-        {
-          name: customerName,
-          email: customerEmail,
-          phoneNumber: customerPhoneNumber,
-        },
+        { name: customerName, email: customerEmail, phoneNumber: customerPhoneNumber },
         organizationId,
       )
       customerIdToUse = customer.id
+    } else {
+      customerIdToUse = customerId
     }
 
     const shipment = await this.shipmentsRepository.update(
       id,
-      { ...rest, customerId: customerIdToUse, vehicleId: vehicleIdToUse ?? undefined },
+      { ...rest, customerId: customerIdToUse },
       organizationId,
     )
     return this.toResponseDto(shipment)

@@ -7,7 +7,7 @@ import { CreateShipmentDto, UpdateShipmentDto } from '../dtos/shipment.dto'
 export class ShipmentsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(organizationId: number): Promise<(Shipment & { customer: Customer | null })[]> {
+  async findAll(organizationId: number): Promise<(Shipment & { customer: Customer })[]> {
     return this.prisma.shipment.findMany({
       where: { organizationId },
       include: {
@@ -19,7 +19,7 @@ export class ShipmentsRepository {
   async findById(
     id: number,
     organizationId: number,
-  ): Promise<(Shipment & { customer: Customer | null }) | null> {
+  ): Promise<(Shipment & { customer: Customer }) | null> {
     return this.prisma.shipment.findFirst({
       where: {
         id,
@@ -32,12 +32,15 @@ export class ShipmentsRepository {
   }
 
   async create(
-    data: CreateShipmentDto,
+    rest: Omit<
+      CreateShipmentDto,
+      'customerId' | 'customerName' | 'customerEmail' | 'customerPhoneNumber'
+    > & {
+      customerId: number
+    },
     userId: number,
     organizationId: number,
-  ): Promise<Shipment & { customer: Customer | null }> {
-    const { customerName, customerEmail, customerPhoneNumber, ...rest } = data
-
+  ): Promise<Shipment & { customer: Customer }> {
     return this.prisma.shipment.create({
       data: {
         name: rest.name,
@@ -48,7 +51,7 @@ export class ShipmentsRepository {
         destinationLat: rest.destination.lat,
         destinationLng: rest.destination.lng,
         destinationName: rest.destination.name,
-        ...(rest.customerId && { customerId: rest.customerId }),
+        customerId: rest.customerId,
         ...(rest.vehicleId && { vehicleId: rest.vehicleId }),
         distance: rest.distance,
         status: rest.status || ShipmentStatus.PENDING,
@@ -60,15 +63,18 @@ export class ShipmentsRepository {
         isShared: rest.isShared || false,
         price: rest.price,
       },
-      include: {
-        customer: true,
-      },
+      include: { customer: true },
     })
   }
 
   async update(
     id: number,
-    data: UpdateShipmentDto,
+    data: Omit<
+      UpdateShipmentDto,
+      'customerId' | 'customerName' | 'customerEmail' | 'customerPhoneNumber'
+    > & {
+      customerId: number
+    },
     organizationId: number,
   ): Promise<Shipment & { customer: Customer | null }> {
     const updateData: Prisma.ShipmentUpdateInput = {}
@@ -85,7 +91,9 @@ export class ShipmentsRepository {
       updateData.destinationLng = data.destination.lng
       updateData.destinationName = data.destination.name
     }
-    if (data.customerId !== undefined) updateData.customer = { connect: { id: data.customerId } }
+    if (data.customerId !== undefined && data.customerId !== null && data.customerId !== 0) {
+      updateData.customer = { connect: { id: data.customerId } }
+    }
     if (data.distance !== undefined) updateData.distance = data.distance
     if (data.status !== undefined) updateData.status = data.status
     if (data.vehicleId) {

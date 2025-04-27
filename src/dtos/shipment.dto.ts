@@ -10,6 +10,7 @@ import {
   IsDate,
   IsObject,
   ValidateNested,
+  ValidateIf,
 } from 'class-validator'
 import { Type } from 'class-transformer'
 
@@ -50,18 +51,17 @@ export class CreateShipmentDto {
   @IsOptional()
   customerId?: number
 
-  // Create a new customer if customer details are provided
   @IsString()
-  @IsOptional()
-  customerName?: string
+  @IsNotEmpty()
+  customerName: string
 
   @IsString()
-  @IsOptional()
-  customerEmail?: string
+  @IsNotEmpty()
+  customerEmail: string
 
   @IsString()
-  @IsOptional()
-  customerPhoneNumber?: string
+  @IsNotEmpty()
+  customerPhoneNumber: string
 
   @IsNumber()
   @IsOptional()
@@ -123,18 +123,14 @@ export class UpdateShipmentDto {
   @IsOptional()
   customerId?: number
 
-  // Create a new customer if customer details are provided
   @IsString()
-  @IsOptional()
-  customerName?: string
+  customerName: string
 
   @IsString()
-  @IsOptional()
-  customerEmail?: string
+  customerEmail: string
 
   @IsString()
-  @IsOptional()
-  customerPhoneNumber?: string
+  customerPhoneNumber: string
 
   @IsNumber()
   @IsOptional()
