@@ -14,7 +14,7 @@ import { MapboxService } from '../common/services/mapbox.service'
 import { UseGuards } from '@nestjs/common'
 import { WsJwtAuthGuard } from '../auth/ws-jwt-auth.guard'
 import { NotFoundException } from '@nestjs/common'
-
+import { convertKnotsToKmH } from '../common/utils'
 @WebSocketGateway({
   cors: {
     origin: process.env.CORS_ALLOWED_ORIGINS?.split(','),
@@ -236,6 +236,10 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
           this.logger.error(`Error getting address for position: ${error.message}`)
         }
       }
+    }
+    if (position.speed) {
+      // Convert speed from knots to km/h
+      position.speed = convertKnotsToKmH(position.speed)
     }
   }
 }

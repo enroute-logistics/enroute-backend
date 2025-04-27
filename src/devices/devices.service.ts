@@ -3,7 +3,7 @@ import { TraccarApiClientService } from '../common/services/traccar-api-client.s
 import Device from '../interfaces/device.interface'
 import Position from '../interfaces/position.interface'
 import { MapboxService } from '../common/services/mapbox.service'
-
+import { convertKnotsToKmH } from '../common/utils'
 const DEFAULT_DAYS_AGO = 10
 
 @Injectable()
@@ -53,6 +53,9 @@ export class DevicesService {
             position.latitude,
             position.longitude,
           )
+        }
+        if (position.speed) {
+          position.speed = convertKnotsToKmH(position.speed)
         }
       }
       return positions
