@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { Vehicle, Prisma, VehicleStatus } from '@prisma/client'
+import { Vehicle, Prisma, VehicleStatus, Driver } from '@prisma/client'
 import { CreateVehicleDto, UpdateVehicleDto, VehicleResponseDto } from '../dtos/vehicle.dto'
 import * as moment from 'moment'
 
@@ -8,38 +8,47 @@ import * as moment from 'moment'
 export class VehiclesRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(organizationId: number): Promise<Vehicle[]> {
+  async findAll(organizationId: number): Promise<VehicleResponseDto[]> {
     return this.prisma.vehicle.findMany({
       where: { organizationId },
-      include: {
-        driver: true,
-      },
+      include: { driver: true },
     })
   }
 
-  async findById(id: number, organizationId: number): Promise<Vehicle | null> {
+  async findById(id: number, organizationId: number): Promise<VehicleResponseDto | null> {
     return this.prisma.vehicle.findFirst({
-      where: {
-        id,
-        organizationId,
-      },
-      include: {
-        driver: true,
-      },
+      where: { id, organizationId },
+      include: { driver: true },
     })
   }
 
-  async findByPlateNumber(plateNumber: string): Promise<Vehicle | null> {
+  async findByPlateNumber(plateNumber: string): Promise<VehicleResponseDto | null> {
     return this.prisma.vehicle.findUnique({
       where: { plateNumber },
-      include: {
-        driver: true,
-      },
+      include: { driver: true },
     })
   }
 
   async create(data: CreateVehicleDto, organizationId: number): Promise<VehicleResponseDto> {
-    const { driver, ...vehicleData } = data
+    const { driver, driverId, ...vehicleData } = data
+
+    if (!driver && !driverId) {
+      throw new Error('Either driver or driverId must be provided')
+    }
+
+    let finalDriverId: number
+    if (driverId) {
+      finalDriverId = driverId
+    } else {
+      const driverResult = await this.prisma.driver.create({
+        data: {
+          name: driver.name,
+          organizationId,
+        },
+      })
+      finalDriverId = driverResult.id
+    }
+
     return this.prisma.vehicle.create({
       data: {
         ...vehicleData,
@@ -47,6 +56,7 @@ export class VehiclesRepository {
           ? moment(vehicleData.maintenanceDate).toDate()
           : null,
         organizationId,
+        driverId: finalDriverId,
       },
       include: {
         driver: true,
@@ -59,8 +69,21 @@ export class VehiclesRepository {
     data: UpdateVehicleDto,
     organizationId: number,
   ): Promise<VehicleResponseDto> {
-    const { driver, ...vehicleData } = data
-    const resultVehicle = await this.prisma.vehicle.update({
+    const { driver, driverId, ...vehicleData } = data
+
+    let finalDriverId = driverId
+
+    if (driver) {
+      const driverResult = await this.prisma.driver.create({
+        data: {
+          name: driver.name,
+          organizationId,
+        },
+      })
+      finalDriverId = driverResult.id
+    }
+
+    return this.prisma.vehicle.update({
       where: {
         id,
         organizationId,
@@ -70,35 +93,18 @@ export class VehiclesRepository {
         maintenanceDate: vehicleData.maintenanceDate
           ? moment(vehicleData.maintenanceDate).toDate()
           : undefined,
+        ...(finalDriverId !== undefined && { driverId: finalDriverId }),
       },
       include: {
         driver: true,
       },
     })
-
-    if (driver) {
-      const deiverResult = await this.prisma.driver.create({
-        data: {
-          name: driver.name,
-          organizationId,
-        },
-      })
-      await this.prisma.vehicle.update({
-        where: { id },
-        data: { driverId: deiverResult.id },
-      })
-      resultVehicle.driver = deiverResult
-    }
-
-    return resultVehicle
   }
 
-  async delete(id: number, organizationId: number): Promise<Vehicle> {
+  async delete(id: number, organizationId: number): Promise<VehicleResponseDto> {
     return this.prisma.vehicle.delete({
-      where: {
-        id,
-        organizationId,
-      },
+      where: { id, organizationId },
+      include: { driver: true },
     })
   }
 }

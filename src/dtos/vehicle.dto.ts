@@ -44,7 +44,12 @@ export class CreateVehicleDto {
   maintenanceDate?: string
 
   @IsNotEmpty()
+  @ValidateIf((o) => !o.driverId)
   driver: CreateDriverDto
+
+  @IsNumber()
+  @ValidateIf((o) => !o.driver)
+  driverId?: number
 
   @IsString()
   @IsOptional()
@@ -83,7 +88,7 @@ export class UpdateVehicleDto {
   maintenanceDate?: string
 
   @IsOptional()
-  driver?: UpdateDriverDto
+  driver?: CreateDriverDto
 
   @IsOptional()
   @IsNumber()
@@ -106,6 +111,6 @@ export class VehicleResponseDto {
   createdAt: Date
   updatedAt: Date
   maintenanceDate?: Date | null
-  driver?: DriverResponseDto | null
+  driver: DriverResponseDto
   description: string
 }
