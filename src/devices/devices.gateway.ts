@@ -92,6 +92,7 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
       // Send the latest position data
       const positions = await this.devicesService.getPositionsByDeviceId(deviceId, 1)
+      this.logger.log('New Positions', positions)
 
       if (positions.length > 0) {
         client.emit('positionUpdate', positions[0])
@@ -170,13 +171,13 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
       if (this.deviceSubscriptions.has(deviceId)) {
         const socketIds = this.deviceSubscriptions.get(deviceId)
         if (socketIds) {
-          socketIds.forEach((socketId) => {
+          for (const socketId of socketIds) {
             const client = this.server.sockets.sockets.get(socketId)
             if (client) {
-              this.populateAddress(position)
+              await this.populateAddress(position)
               client.emit('positionUpdate', position)
             }
-          })
+          }
         }
       }
     }
