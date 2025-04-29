@@ -2,7 +2,7 @@ import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Logger } fr
 import { Observable, of } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { RedisCacheService } from '../services/redis-cache.service'
-
+import { CACHE_TTL_KEY, CACHE_KEY } from '../decorators/redis-cache.decorator'
 export interface CacheOptions {
   ttl?: number
   key?: string
@@ -44,8 +44,8 @@ export class RedisCacheInterceptor implements NestInterceptor {
 
   private getCacheOptions(context: ExecutionContext): CacheOptions {
     const handler = context.getHandler()
-    const ttl = Reflect.getMetadata('cache-ttl', handler)
-    const key = Reflect.getMetadata('cache-key', handler)
+    const ttl = Reflect.getMetadata(CACHE_TTL_KEY, handler)
+    const key = Reflect.getMetadata(CACHE_KEY, handler)
 
     return {
       ttl: ttl || 3600, // Default 1 hour

@@ -17,7 +17,7 @@ export class MapboxService {
   private readonly accessToken: string
   private readonly GEOCODING_CACHE_TTL = 60 * 60 * 24 * 7 // 7 days in seconds
   private readonly ADDRESS_SEARCH_CACHE_TTL = 60 * 60 * 24 * 7 // 7 days in seconds
-  private readonly ROUTE_SEARCH_CACHE_TTL = 60 * 60 * 24 // 1 day in seconds
+  private readonly ROUTE_SEARCH_CACHE_TTL = 60 * 60 * 24 // 7 day in seconds
   private readonly COORDINATE_THRESHOLD = 0.001 // ~100 meters
 
   constructor(
@@ -67,7 +67,7 @@ export class MapboxService {
         // Return the most relevant result (usually the first one)
         const address = features[0].place_name
 
-        // Cache the result
+        // Cache the result with no expiration
         await this.redisCacheService.set(exactCacheKey, address, this.GEOCODING_CACHE_TTL)
 
         return address
@@ -141,7 +141,7 @@ export class MapboxService {
         latitude: feature.center[1],
       }))
 
-      // Cache the results
+      // Cache the results with no expiration
       await this.redisCacheService.set(cacheKey, results, this.ADDRESS_SEARCH_CACHE_TTL)
 
       return results
@@ -197,7 +197,7 @@ export class MapboxService {
       const result = response.data
       result.routes = result.routes[0]
 
-      // Cache the result
+      // Cache the result with no expiration
       await this.redisCacheService.set(cacheKey, result, this.ROUTE_SEARCH_CACHE_TTL)
 
       return result

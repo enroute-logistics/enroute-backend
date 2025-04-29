@@ -47,7 +47,7 @@ export class DevicesController {
   })
   @ApiQuery({ name: 'to', required: false, type: String, description: 'End date in ISO format' })
   @UseInterceptors(RedisCacheInterceptor)
-  @RedisCacheTTL(7200) // 2 hours
+  @RedisCacheTTL(3600)
   async getPastPositionsByDeviceId(
     @Param('id') id: number,
     @Query('from') from?: string,

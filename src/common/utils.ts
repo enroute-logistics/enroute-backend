@@ -1,3 +1,3 @@
 export function convertKnotsToKmH(speed: number): number {
-  return speed * 1.852
+  return Math.round(speed * 1.852)
 }
