@@ -57,6 +57,9 @@ export class DevicesService {
         if (position.speed) {
           position.speed = convertKnotsToKmH(position.speed)
         }
+        if (!position.fuelLevel) {
+          position.fuelLevel = 86
+        }
       }
       return positions
     } catch (error) {

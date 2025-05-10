@@ -15,6 +15,7 @@ export default interface Position {
   address: string
   accuracy: number
   geofenceIds: number[]
+  fuelLevel: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   attributes: Record<string, any>
 }

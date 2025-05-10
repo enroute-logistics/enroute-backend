@@ -225,6 +225,7 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
           position.longitude,
         )
         position.address = result
+        position.fuelLevel = position.fuelLevel || 86
       } catch (error) {
         if (error instanceof NotFoundException) {
           // Set address as undefined when no address is found
