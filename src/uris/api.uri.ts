@@ -62,3 +62,14 @@ export const CUSTOMER_URI = {
   BASE: `${API_BASE}/customers`,
   BY_ID: '/:id',
 }
+
+export const FILE_URI = {
+  BASE: `${API_BASE}/files`,
+  UPLOAD: '/upload',
+  UPLOAD_VEHICLE: '/vehicle/:vehicleId/upload',
+  UPLOAD_SHIPMENT: '/shipment/:shipmentId/upload',
+  DOWNLOAD: '/:fileId/download',
+  VEHICLE_FILES: '/vehicle/:vehicleId',
+  SHIPMENT_FILES: '/shipment/:shipmentId',
+  DELETE_FILE: '/:fileId',
+}
