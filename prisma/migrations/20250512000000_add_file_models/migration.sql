@@ -43,16 +43,16 @@ CREATE UNIQUE INDEX "VehicleFile_vehicleId_fileId_key" ON "VehicleFile" ("vehicl
 CREATE UNIQUE INDEX "ShipmentFile_shipmentId_fileId_key" ON "ShipmentFile" ("shipmentId", "fileId");
 
 -- AddForeignKey
-ALTER TABLE "File" ADD CONSTRAINT "File_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization" ("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "File" ADD CONSTRAINT "File_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VehicleFile" ADD CONSTRAINT "VehicleFile_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "Vehicle" ("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "VehicleFile" ADD CONSTRAINT "VehicleFile_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "Vehicle" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "VehicleFile" ADD CONSTRAINT "VehicleFile_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "File" ("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "VehicleFile" ADD CONSTRAINT "VehicleFile_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "File" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ShipmentFile" ADD CONSTRAINT "ShipmentFile_shipmentId_fkey" FOREIGN KEY ("shipmentId") REFERENCES "Shipment" ("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ShipmentFile" ADD CONSTRAINT "ShipmentFile_shipmentId_fkey" FOREIGN KEY ("shipmentId") REFERENCES "Shipment" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ShipmentFile" ADD CONSTRAINT "ShipmentFile_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "File" ("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ShipmentFile" ADD CONSTRAINT "ShipmentFile_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "File" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
