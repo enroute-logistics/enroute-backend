@@ -79,13 +79,13 @@ export class DevicesService {
       to = new Date().toISOString()
     }
     const result = await this.traccarApiClient.getPositionsInTimeRange(deviceId, from, to)
-    // filter out locations that are around the same location within 100 meters
+    // filter out locations that are around the same location within 10 meters
     return result.filter(
       (location, index, self) =>
         self.findIndex(
           (t) =>
-            Math.abs(t.latitude - location.latitude) < 0.001 &&
-            Math.abs(t.longitude - location.longitude) < 0.001,
+            Math.abs(t.latitude - location.latitude) < 0.0001 &&
+            Math.abs(t.longitude - location.longitude) < 0.0001,
         ) === index,
     )
   }
