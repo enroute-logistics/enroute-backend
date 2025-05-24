@@ -18,6 +18,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 import { FileTypeValidator, MaxFileSizeValidator, ParseFilePipe } from '@nestjs/common'
 import { Response } from 'express'
 import { FILE_URI } from '../uris/api.uri'
+import { File } from '@prisma/client'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'application/pdf']
@@ -117,7 +118,7 @@ export class FileUploadController {
   }
 
   @Get(FILE_URI.SHIPMENT_FILES)
-  async getShipmentFiles(@Request() req, @Param('shipmentId') shipmentId: string) {
+  async getShipmentFiles(@Request() req, @Param('shipmentId') shipmentId: string): Promise<File[]> {
     try {
       const files = await this.fileUploadService.getShipmentFiles(parseInt(shipmentId))
       return files
