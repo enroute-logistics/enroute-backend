@@ -1,0 +1,8 @@
+export { BaseReportHandler } from './base-report.handler'
+export { TotalShipmentsHandler } from './total-shipments.handler'
+export { ShipmentsByStatusHandler } from './shipments-by-status.handler'
+export { TotalDistanceHandler } from './total-distance.handler'
+export { VehicleUtilizationHandler } from './vehicle-utilization.handler'
+export { CustomerShipmentsHandler } from './customer-shipments.handler'
+export { RevenueOverTimeHandler } from './revenue-over-time.handler'
+export { DriverPerformanceHandler } from './driver-performance.handler'

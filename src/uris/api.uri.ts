@@ -73,3 +73,8 @@ export const FILE_URI = {
   SHIPMENT_FILES: '/shipment/:shipmentId',
   DELETE_FILE: '/:fileId',
 }
+
+export const REPORT_URI = {
+  BASE: `${API_BASE}/reports`,
+  GENERATE: '/generate',
+}

@@ -14,6 +14,7 @@ import { DriversModule } from './drivers/drivers.module'
 import { CustomersModule } from './customers/customers.module'
 import { RedisCacheModule } from './common/redis-cache.module'
 import { FileUploadModule } from './file-upload/file-upload.module'
+import { ReportsModule } from './reports/reports.module'
 
 // Prisma Service
 import { PrismaService } from './prisma/prisma.service'
@@ -36,6 +37,7 @@ import { RequestLoggerMiddleware } from './common/middleware/request-logger.midd
     DriversModule,
     CustomersModule,
     FileUploadModule,
+    ReportsModule,
   ],
   providers: [PrismaService],
 })

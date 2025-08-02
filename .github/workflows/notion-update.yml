@@ -1,0 +1,33 @@
+name: Update Notion Ticket
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  update-notion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract commit messages from latest push
+        run: |
+          git fetch origin main --depth=1
+          echo "$(git log --pretty=format:%s -5)"
+          git log --pretty=format:%s -5 > commits.txt
+
+      - name: Run Notion update script
+        run: node scripts/notion-update.cjs
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
