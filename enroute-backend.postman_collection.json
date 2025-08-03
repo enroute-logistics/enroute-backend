@@ -265,6 +265,467 @@
           }
         }
       ]
+    },
+    {
+      "name": "Reports",
+      "description": "Generate comprehensive analytics and reports for shipments, vehicles, customers, and drivers. All reports support flexible time ranges and optional granularity settings.",
+      "item": [
+        {
+          "name": "Total Shipments Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"granularity\": \"daily\",\n    \"type\": \"total-shipments\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          },
+          "response": [
+            {
+              "name": "Total Shipments Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"granularity\": \"daily\",\n    \"type\": \"total-shipments\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/reports/generate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reports", "generate"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"type\": \"total-shipments\",\n    \"chartType\": \"line\",\n    \"title\": \"Total Shipments\",\n    \"description\": \"Number of shipments created over time\",\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"granularity\": \"daily\",\n    \"totalCount\": 150,\n    \"results\": [\n        {\n            \"timestamp\": \"2024-01-01\",\n            \"value\": 5\n        },\n        {\n            \"timestamp\": \"2024-01-02\",\n            \"value\": 8\n        },\n        {\n            \"timestamp\": \"2024-01-03\",\n            \"value\": 12\n        }\n    ],\n    \"generatedAt\": \"2024-01-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Shipments by Status Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-12-31T23:59:59Z\"\n    },\n    \"type\": \"shipments-by-status\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          },
+          "response": [
+            {
+              "name": "Shipments by Status Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-12-31T23:59:59Z\"\n    },\n    \"type\": \"shipments-by-status\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/reports/generate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reports", "generate"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"type\": \"shipments-by-status\",\n    \"chartType\": \"pie\",\n    \"title\": \"Shipments by Status\",\n    \"description\": \"Distribution of shipments by their current status\",\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-12-31T23:59:59Z\"\n    },\n    \"totalCount\": 250,\n    \"results\": [\n        {\n            \"label\": \"PENDING\",\n            \"value\": 75,\n            \"percentage\": 30\n        },\n        {\n            \"label\": \"IN_TRANSIT\",\n            \"value\": 100,\n            \"percentage\": 40\n        },\n        {\n            \"label\": \"DELIVERED\",\n            \"value\": 75,\n            \"percentage\": 30\n        }\n    ],\n    \"generatedAt\": \"2024-01-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Total Distance Covered Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"granularity\": \"weekly\",\n    \"type\": \"total-distance-covered\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          },
+          "response": [
+            {
+              "name": "Total Distance Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"granularity\": \"weekly\",\n    \"type\": \"total-distance-covered\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/reports/generate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reports", "generate"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"type\": \"total-distance-covered\",\n    \"chartType\": \"area\",\n    \"title\": \"Total Distance Covered\",\n    \"description\": \"Cumulative distance covered by all shipments (km)\",\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"granularity\": \"weekly\",\n    \"totalValue\": 12500.75,\n    \"results\": [\n        {\n            \"timestamp\": \"2023-12-31\",\n            \"value\": 2850.25\n        },\n        {\n            \"timestamp\": \"2024-01-07\",\n            \"value\": 3200.50\n        },\n        {\n            \"timestamp\": \"2024-01-14\",\n            \"value\": 2950.00\n        },\n        {\n            \"timestamp\": \"2024-01-21\",\n            \"value\": 1875.75\n        },\n        {\n            \"timestamp\": \"2024-01-28\",\n            \"value\": 1624.25\n        }\n    ],\n    \"generatedAt\": \"2024-01-15T10:30:00Z\",\n    \"metadata\": {\n        \"unit\": \"km\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Vehicle Utilization Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"type\": \"vehicle-utilization\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          },
+          "response": [
+            {
+              "name": "Vehicle Utilization Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"type\": \"vehicle-utilization\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/reports/generate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reports", "generate"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"type\": \"vehicle-utilization\",\n    \"chartType\": \"bar\",\n    \"title\": \"Vehicle Utilization\",\n    \"description\": \"Number of shipments assigned to each vehicle\",\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-01-31T23:59:59Z\"\n    },\n    \"totalCount\": 85,\n    \"results\": [\n        {\n            \"label\": \"Fleet Truck 001\",\n            \"value\": 25,\n            \"metadata\": {\n                \"vehicleId\": 1,\n                \"plateNumber\": \"ABC-123\"\n            }\n        },\n        {\n            \"label\": \"Fleet Truck 002\",\n            \"value\": 30,\n            \"metadata\": {\n                \"vehicleId\": 2,\n                \"plateNumber\": \"DEF-456\"\n            }\n        },\n        {\n            \"label\": \"Fleet Van 001\",\n            \"value\": 18,\n            \"metadata\": {\n                \"vehicleId\": 3,\n                \"plateNumber\": \"GHI-789\"\n            }\n        },\n        {\n            \"label\": \"Fleet Truck 003\",\n            \"value\": 12,\n            \"metadata\": {\n                \"vehicleId\": 4,\n                \"plateNumber\": \"JKL-012\"\n            }\n        }\n    ],\n    \"generatedAt\": \"2024-01-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Customer Shipments Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-06-30T23:59:59Z\"\n    },\n    \"type\": \"customer-shipments\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          },
+          "response": [
+            {
+              "name": "Customer Shipments Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-06-30T23:59:59Z\"\n    },\n    \"type\": \"customer-shipments\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/reports/generate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reports", "generate"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"type\": \"customer-shipments\",\n    \"chartType\": \"bar\",\n    \"title\": \"Customer Shipments\",\n    \"description\": \"Number of shipments per customer\",\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-06-30T23:59:59Z\"\n    },\n    \"totalCount\": 120,\n    \"results\": [\n        {\n            \"label\": \"Acme Corporation\",\n            \"value\": 45,\n            \"metadata\": {\n                \"customerId\": 1,\n                \"totalRevenue\": 22500.00\n            }\n        },\n        {\n            \"label\": \"Global Logistics Inc\",\n            \"value\": 32,\n            \"metadata\": {\n                \"customerId\": 2,\n                \"totalRevenue\": 18750.50\n            }\n        },\n        {\n            \"label\": \"Metro Shipping Co\",\n            \"value\": 28,\n            \"metadata\": {\n                \"customerId\": 3,\n                \"totalRevenue\": 15200.25\n            }\n        },\n        {\n            \"label\": \"Express Delivery Ltd\",\n            \"value\": 15,\n            \"metadata\": {\n                \"customerId\": 4,\n                \"totalRevenue\": 8900.00\n            }\n        }\n    ],\n    \"generatedAt\": \"2024-01-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Revenue Over Time Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-12-31T23:59:59Z\"\n    },\n    \"granularity\": \"monthly\",\n    \"type\": \"revenue-over-time\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          },
+          "response": [
+            {
+              "name": "Revenue Over Time Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-12-31T23:59:59Z\"\n    },\n    \"granularity\": \"monthly\",\n    \"type\": \"revenue-over-time\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/reports/generate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reports", "generate"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"type\": \"revenue-over-time\",\n    \"chartType\": \"line\",\n    \"title\": \"Revenue Over Time\",\n    \"description\": \"Total revenue generated from shipments\",\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-12-31T23:59:59Z\"\n    },\n    \"granularity\": \"monthly\",\n    \"totalValue\": 487650.75,\n    \"results\": [\n        {\n            \"timestamp\": \"2024-01\",\n            \"value\": 45200.50\n        },\n        {\n            \"timestamp\": \"2024-02\",\n            \"value\": 38950.25\n        },\n        {\n            \"timestamp\": \"2024-03\",\n            \"value\": 52800.00\n        },\n        {\n            \"timestamp\": \"2024-04\",\n            \"value\": 41300.75\n        },\n        {\n            \"timestamp\": \"2024-05\",\n            \"value\": 47850.25\n        },\n        {\n            \"timestamp\": \"2024-06\",\n            \"value\": 55200.00\n        }\n    ],\n    \"generatedAt\": \"2024-01-15T10:30:00Z\",\n    \"metadata\": {\n        \"currency\": \"USD\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Driver Performance Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-03-31T23:59:59Z\"\n    },\n    \"type\": \"driver-performance\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          },
+          "response": [
+            {
+              "name": "Driver Performance Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-03-31T23:59:59Z\"\n    },\n    \"type\": \"driver-performance\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/reports/generate",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reports", "generate"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n    \"type\": \"driver-performance\",\n    \"chartType\": \"bar\",\n    \"title\": \"Driver Performance\",\n    \"description\": \"Number of completed shipments per driver\",\n    \"timeRange\": {\n        \"startDateTime\": \"2024-01-01T00:00:00Z\",\n        \"endDateTime\": \"2024-03-31T23:59:59Z\"\n    },\n    \"totalCount\": 95,\n    \"results\": [\n        {\n            \"label\": \"John Smith\",\n            \"value\": 28,\n            \"metadata\": {\n                \"driverId\": 1,\n                \"totalShipments\": 32,\n                \"totalDistance\": 4250.75,\n                \"completionRate\": 88\n            }\n        },\n        {\n            \"label\": \"Maria Rodriguez\",\n            \"value\": 25,\n            \"metadata\": {\n                \"driverId\": 2,\n                \"totalShipments\": 28,\n                \"totalDistance\": 3890.25,\n                \"completionRate\": 89\n            }\n        },\n        {\n            \"label\": \"Ahmed Hassan\",\n            \"value\": 22,\n            \"metadata\": {\n                \"driverId\": 3,\n                \"totalShipments\": 26,\n                \"totalDistance\": 3450.50,\n                \"completionRate\": 85\n            }\n        },\n        {\n            \"label\": \"Lisa Chen\",\n            \"value\": 20,\n            \"metadata\": {\n                \"driverId\": 4,\n                \"totalShipments\": 22,\n                \"totalDistance\": 2980.00,\n                \"completionRate\": 91\n            }\n        }\n    ],\n    \"generatedAt\": \"2024-01-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Generate Report - Template",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{auth_token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"timeRange\": {\n        \"startDateTime\": \"{{start_date}}\",\n        \"endDateTime\": \"{{end_date}}\"\n    },\n    \"granularity\": \"{{granularity}}\",\n    \"type\": \"{{report_type}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reports", "generate"]
+            }
+          }
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Available report types:",
+              "// - total-shipments",
+              "// - shipments-by-status",
+              "// - total-distance-covered",
+              "// - vehicle-utilization",
+              "// - customer-shipments",
+              "// - revenue-over-time",
+              "// - driver-performance",
+              "",
+              "// Available granularities (optional):",
+              "// - minute",
+              "// - hourly",
+              "// - daily",
+              "// - weekly",
+              "// - monthly",
+              "",
+              "// Set common variables",
+              "pm.collectionVariables.set('start_date', '2024-01-01T00:00:00Z');",
+              "pm.collectionVariables.set('end_date', '2024-12-31T23:59:59Z');",
+              "pm.collectionVariables.set('granularity', 'daily');",
+              "pm.collectionVariables.set('report_type', 'total-shipments');"
+            ]
+          }
+        }
+      ]
     }
   ]
 }
