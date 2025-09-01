@@ -14,7 +14,7 @@ import { MapboxService } from '../common/services/mapbox.service'
 import { UseGuards } from '@nestjs/common'
 import { WsJwtAuthGuard } from '../auth/ws-jwt-auth.guard'
 import { NotFoundException } from '@nestjs/common'
-import { convertKnotsToKmH } from '../common/utils'
+import { convertKnotsToKmH, normalizePositionTimestamps } from '../common/utils'
 @WebSocketGateway({
   cors: {
     origin: process.env.CORS_ALLOWED_ORIGINS?.split(','),
@@ -173,8 +173,10 @@ export class DevicesGateway implements OnGatewayInit, OnGatewayConnection, OnGat
           for (const socketId of socketIds) {
             const client = this.server.sockets.sockets.get(socketId)
             if (client) {
-              await this.populateAddress(position)
-              client.emit('positionUpdate', position)
+              // Normalize timestamps before populating address
+              const normalizedPosition = normalizePositionTimestamps(position)
+              await this.populateAddress(normalizedPosition)
+              client.emit('positionUpdate', normalizedPosition)
             }
           }
         }

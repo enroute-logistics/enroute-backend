@@ -1,18 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { TraccarApiClientService } from '../common/services/traccar-api-client.service'
 import Position from '../interfaces/position.interface'
+import { normalizePositionTimestamps } from '../common/utils'
 
 @Injectable()
 export class PositionsService {
   constructor(private traccarApiClient: TraccarApiClientService) {}
 
   async findAll(): Promise<Position[]> {
-    return this.traccarApiClient.getAllPositions()
+    const positions = await this.traccarApiClient.getAllPositions()
+    return positions.map((position) => normalizePositionTimestamps(position))
   }
 
   async findOne(id: number): Promise<Position> {
     try {
-      return await this.traccarApiClient.getPositionById(id)
+      const position = await this.traccarApiClient.getPositionById(id)
+      return normalizePositionTimestamps(position)
     } catch (error) {
       if (error.status === 404) {
         throw new NotFoundException(`Position with ID ${id} not found`)
@@ -22,7 +25,8 @@ export class PositionsService {
   }
 
   async getPositionsByDeviceId(deviceId: number, limit?: number): Promise<Position[]> {
-    return this.traccarApiClient.getPositionsByDeviceId(deviceId, limit)
+    const positions = await this.traccarApiClient.getPositionsByDeviceId(deviceId, limit)
+    return positions.map((position) => normalizePositionTimestamps(position))
   }
 
   async getLatestPositionByDeviceId(deviceId: number): Promise<Position> {
@@ -31,7 +35,7 @@ export class PositionsService {
       if (!positions.length) {
         throw new NotFoundException(`No positions found for device with ID ${deviceId}`)
       }
-      return positions[0]
+      return normalizePositionTimestamps(positions[0])
     } catch (error) {
       if (error.status === 404) {
         throw new NotFoundException(`No positions found for device with ID ${deviceId}`)
@@ -44,12 +48,13 @@ export class PositionsService {
     const positions: Position[] = []
     for (const deviceId of deviceIds) {
       const position = await this.getLatestPositionByDeviceId(deviceId)
-      positions.push(position)
+      positions.push(normalizePositionTimestamps(position))
     }
     return positions
   }
 
   async getPositionsInTimeRange(deviceId: number, from: string, to: string): Promise<Position[]> {
-    return this.traccarApiClient.getPositionsInTimeRange(deviceId, from, to)
+    const positions = await this.traccarApiClient.getPositionsInTimeRange(deviceId, from, to)
+    return positions.map((position) => normalizePositionTimestamps(position))
   }
 }

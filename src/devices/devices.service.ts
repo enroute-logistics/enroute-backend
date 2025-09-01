@@ -3,7 +3,7 @@ import { TraccarApiClientService } from '../common/services/traccar-api-client.s
 import Device from '../interfaces/device.interface'
 import Position from '../interfaces/position.interface'
 import { MapboxService } from '../common/services/mapbox.service'
-import { convertKnotsToKmH } from '../common/utils'
+import { convertKnotsToKmH, normalizePositionTimestamps } from '../common/utils'
 const DEFAULT_DAYS_AGO = 10
 
 @Injectable()
@@ -48,6 +48,9 @@ export class DevicesService {
     try {
       const positions = await this.traccarApiClient.getPositionsByDeviceId(deviceId, limit)
       for (const position of positions) {
+        // Normalize timestamps to UTC
+        Object.assign(position, normalizePositionTimestamps(position))
+
         if (!position.address) {
           position.address = await this.mapboxService.getAddressFromCoordinates(
             position.latitude,
@@ -79,13 +82,17 @@ export class DevicesService {
       to = new Date().toISOString()
     }
     const result = await this.traccarApiClient.getPositionsInTimeRange(deviceId, from, to)
+
+    // Normalize timestamps to UTC for all positions
+    const normalizedPositions = result.map((position) => normalizePositionTimestamps(position))
+
     // filter out locations that are around the same location within 10 meters
-    return result.filter(
+    return normalizedPositions.filter(
       (location, index, self) =>
         self.findIndex(
           (t) =>
-            Math.abs(t.latitude - location.latitude) < 0.0001 &&
-            Math.abs(t.longitude - location.longitude) < 0.0001,
+            Math.abs(t.latitude - location.latitude) < 0.00001 &&
+            Math.abs(t.longitude - location.longitude) < 0.00001,
         ) === index,
     )
   }
