@@ -18,8 +18,8 @@ export function normalizeTimestampToUtc(timestamp: string): string {
       return timestamp
     }
 
-    // Add 6 hours (6 * 60 * 60 * 1000 milliseconds)
-    const adjustedDate = new Date(date.getTime() + 6 * 60 * 60 * 1000)
+    // Add 3 hours (3 * 60 * 60 * 1000 milliseconds)
+    const adjustedDate = new Date(date.getTime() + 3 * 60 * 60 * 1000)
 
     // Return as UTC ISO string
     return adjustedDate.toISOString()
