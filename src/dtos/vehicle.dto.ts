@@ -1,4 +1,4 @@
-import { VehicleStatus } from '@prisma/client'
+import { VehicleStatus, VehicleColor } from '@prisma/client'
 import {
   IsString,
   IsNumber,
@@ -37,6 +37,10 @@ export class CreateVehicleDto {
 
   @IsEnum(VehicleStatus)
   status: VehicleStatus
+
+  @IsEnum(VehicleColor)
+  @IsOptional()
+  color?: VehicleColor
 
   @ValidateIf((o) => o.maintenanceDate !== undefined)
   @IsString()
@@ -82,6 +86,10 @@ export class UpdateVehicleDto {
   @IsOptional()
   status?: VehicleStatus
 
+  @IsEnum(VehicleColor)
+  @IsOptional()
+  color?: VehicleColor
+
   @ValidateIf((o) => o.maintenanceDate !== undefined)
   @IsString()
   @IsNotEmpty()
@@ -107,6 +115,7 @@ export class VehicleResponseDto {
   capacity: number
   deviceId: string | null
   status: VehicleStatus
+  color: VehicleColor
   organizationId: number
   createdAt: Date
   updatedAt: Date
