@@ -19,6 +19,7 @@ export class PositionsController {
     if (deviceId) {
       return this.positionsService.getPositionsByDeviceId(deviceId)
     }
+
     return this.positionsService.findAll()
   }
 
